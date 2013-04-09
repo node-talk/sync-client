@@ -102,13 +102,17 @@ Monitor.prototype._delete = function(file, stat) {
 };
 
 /**
- * Handles a change event.
+ * Handles an update event.
  *
  * @private
  * @param {string} file The file
  * @param {fs.Stats} stat The file stats
  */
-Monitor.prototype._change = function(file, stat) {};
+Monitor.prototype._update = function(file, stat) {
+    if (stat.isFile()) {
+        this.emit('update', file, stat);
+    }
+};
 
 /**
  * Closes the monitor object.
@@ -123,10 +127,12 @@ Monitor.prototype.close = function() {
 module.exports.Monitor = Monitor;
 
 /**
- * Monitors a location for file creation or deletion. The method returns an
- * event emitter which sends 2 different events with the path and the file stat:
+ * Monitors a location for file creation, deletion or modifications. The method
+ * returns an event emitter which sends 3 different events with 2 arguments, the
+ * path and the file stat:
  *  - 'create': when a new file is created
  *  - 'delete': when a file is deleted
+ *  - 'update': when a file is updated
  *
  * Note that upon registration, the monitor sends a 'create' event for every
  * existing file.
