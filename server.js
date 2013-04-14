@@ -7,6 +7,7 @@ var express = require('express'),
 
 // setup cli
 var args = require('optimist').usage('Usage: node server.js --root <root folder>').demand('root').describe('root', 'the folder to synchronize files from').argv;
+args.root = path.resolve(args.root);
 
 // create and setup app
 var app = express();
