@@ -110,6 +110,7 @@ Monitor.prototype._delete = function(file, stat) {
  */
 Monitor.prototype._update = function(file, stat) {
     if (stat.isFile()) {
+        this._files[file] = stat;
         this.emit('update', file, stat);
     }
 };
