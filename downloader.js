@@ -103,7 +103,7 @@ Downloader.prototype._download = function(download, callback) {
     // create directories
     mkdirParent(path.dirname(download.file), function() {
         // download file
-        request(download.location, callback).pipe(fs.createWriteStream(download.file));
+        request(download.location).on('end', callback).pipe(fs.createWriteStream(download.file));
     });
 };
 
