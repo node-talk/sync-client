@@ -1,5 +1,4 @@
 var path = require('path'),
-    util = require('util'),
     fs = require('fs'),
     url = require('url'),
     async = require('async'),
@@ -53,13 +52,20 @@ Downloader.prototype._downloadIfNeeded = function(download, callback) {
     // check if file exists
     fs.exists(file, function(exists) {
         if (exists) {
-            // check if file is complete
+            // check if file has changed
             fs.stat(file, function(err, stat) {
                 if (stat.size != download.stat.size) {
-                    log.info('size changed, downloading', {
+                    log.info('downloading (size)', {
                         file: file,
-                        size: stat.size,
-                        expected: download.stat.size
+                        size: download.stat.size
+                    });
+                    // download...
+                    self._download(download, self._downloadIfNeeded.bind(self, download, callback));
+                }
+                else if (stat.mtime.getTime() < download.stat.mtime.getTime()) {
+                    log.info('downloading (mtime)', {
+                        file: file,
+                        size: download.stat.size
                     });
                     // download...
                     self._download(download, self._downloadIfNeeded.bind(self, download, callback));
@@ -68,7 +74,7 @@ Downloader.prototype._downloadIfNeeded = function(download, callback) {
                     // download complete
                     log.info('download complete', {
                         file: file,
-                        size: stat.size
+                        size: download.stat.size
                     });
                     // callback...
                     callback();
@@ -76,7 +82,7 @@ Downloader.prototype._downloadIfNeeded = function(download, callback) {
             });
         }
         else {
-            log.info('new file, downloading', {
+            log.info('downloading (new)', {
                 file: file,
                 size: download.stat.size
             });
@@ -151,7 +157,7 @@ Downloader.prototype.download = function(location, stat) {
 
     // start the download
     var download = this._downloads[file] = new Download(file, location, stat);
-    log.info('starting download', {
+    log.info('queuing download', {
         file: file,
         location: location,
         size: stat.size

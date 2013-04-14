@@ -17,6 +17,13 @@ var downloader = downloader.downloader(args.root);
 // bind change events to downloader
 ['create', 'update'].forEach(function(event) {
     io.on(event, function(file, stat) {
+        // fix times as socket.io converts them to strings
+        [ "atime", "mtime", "ctime" ].forEach(function(time) {
+            if (typeof stat[time] === 'string') {
+                stat[time] = new Date(stat[time]);
+            }
+        });
+        // download file
         downloader.download(url.resolve(args.server, file), stat);
     });
 });
