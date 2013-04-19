@@ -125,7 +125,6 @@ Watcher.prototype._removeWatch = function(wd, auto) {
  * @param {string} file The created file
  */
 Watcher.prototype._create = function(file) {
-    console.log('create', file);
     this._files[file] = null;
     this.emit('create', file);
 };
