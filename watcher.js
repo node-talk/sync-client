@@ -126,6 +126,8 @@ Watcher.prototype._removeWatch = function(wd, auto) {
  */
 Watcher.prototype._create = function(file) {
     this._files[file] = null;
+
+    log.debug('firing create', file);
     this.emit('create', file);
 };
 
@@ -142,6 +144,8 @@ Watcher.prototype._update = function(file, stat) {
         stat = fs.statSync(file);
     }
     this._files[file] = stat;
+
+    log.debug('firing update', file, stat);
     this.emit('update', file, stat);
 };
 
@@ -155,6 +159,8 @@ Watcher.prototype._delete = function(file) {
     var stat = this._files[file];
     if (stat !== undefined) {
         delete this._files[file];
+
+        log.debug('firing delete', file);
         this.emit('delete', file);
     }
 };
