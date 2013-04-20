@@ -49,6 +49,18 @@ Downloader.prototype._downloadIfNeeded = function(download, callback) {
     var self = this;
     var file = download.file;
 
+    // if error is set, warn and return
+    if (download.err !== undefined) {
+        // download failed
+        log.warn('download failed', {
+            file: file,
+            size: download.stat.size,
+            err: download.err
+        });
+        // callback...
+        return callback();
+    }
+
     // check if file exists
     fs.exists(file, function(exists) {
         if (exists) {
@@ -103,7 +115,16 @@ Downloader.prototype._download = function(download, callback) {
     // create directories
     mkdirParent(path.dirname(download.file), function() {
         // download file
-        request(download.location).on('end', callback).pipe(fs.createWriteStream(download.file));
+        request(download.location).on('response', function(res) {
+            // check status code
+            if (res.statusCode !== 200) {
+                download.err = 'Status: ' + res.statusCode;
+            }
+        }).on('error', function(err) {
+            // since we never got a response, we have to callback ourselves
+            download.err = '' + err;
+            callback();
+        }).on('end', callback).pipe(fs.createWriteStream(download.file));
     });
 };
 
