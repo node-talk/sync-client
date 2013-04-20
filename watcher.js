@@ -230,7 +230,7 @@ Watcher.prototype._onEvent = function(event) {
         log.debug('IN_DELETE', event);
 
         // fire delete
-        if (event.mask & Inotify.IN_ISDIR === 0) {
+        if ((event.mask & Inotify.IN_ISDIR) === 0) {
             this._delete(this._toPath(event));
         }
     }
