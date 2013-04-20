@@ -145,7 +145,7 @@ Watcher.prototype._update = function(file, stat) {
     }
     this._files[file] = stat;
 
-    log.debug('firing update', file, stat);
+    log.debug('firing update', file);
     this.emit('update', file, stat);
 };
 
