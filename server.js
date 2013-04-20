@@ -1,7 +1,7 @@
 var express = require('express'),
     http = require('http'),
     socketio = require('socket.io'),
-    monitor = require('./monitor'),
+    watcher = require('./watcher'),
     log = require('winston'),
     path = require('path');
 
@@ -36,12 +36,14 @@ server.listen(process.env.PORT || 8888);
 
 // create monitor
 log.info('monitoring', args.root);
-var files = monitor.monitor(args.root);
+var files = watcher.watch(args.root);
 
 // bind socket to monitor
 io.on('connection', function(socket) {
     ['create', 'delete', 'update'].forEach(function(event) {
-        var listener = socket.emit.bind(socket, event);
+        var listener = function(file, stat) {
+            socket.emit(event, path.relative(args.root, file), stat);
+        };
 
         // listen for event
         files.on(event, listener);

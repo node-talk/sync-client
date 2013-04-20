@@ -15,7 +15,7 @@
     "dependencies": {
         "express": "3.1.x",
         "socket.io": "0.9.x",
-        "watchr": "2.4.x",
+        "inotify": "1.2.x",
         "walk": "2.2.x",
         "winston": "0.6.x",
         "optimist": "0.4.x",
