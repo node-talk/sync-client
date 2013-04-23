@@ -125,10 +125,14 @@ Watcher.prototype._removeWatch = function(wd, auto) {
  * @param {string} file The created file
  */
 Watcher.prototype._create = function(file) {
-    this._files[file] = null;
-
     log.debug('firing create', file);
     this.emit('create', file);
+
+    // when hardlinking, consider this as an instantaneous create/write
+    var stat = fs.statSync(file);
+    if (stat.nlink > 1) {
+        this._update(file, stat);
+    }
 };
 
 /**
