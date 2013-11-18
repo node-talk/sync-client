@@ -14,24 +14,28 @@ module.exports.parse = function(file) {
 		info.show = res[1];
 		info.season = res[2];
 		info.episode = res[3];
+		log.info('debug','Matched on (.*)\.E(\d\d)')
 	}
 	if (res = /(.*)\.(\d{1,2})(\d\d)\..*/i.exec(file)) {
 		info.show = res[1];
 		info.season = res[2];
 		info.episode = res[3];
+		log.info('debug','Matched on (.*)\.(\d{1,2})(\d\d)\..*')
 	}
-	/* For shows that have normal S??E?? (with extra E?? for 2 episodes in 1) */
+	/* For shows that have normal S??E?? (with extr E?? for 2 episodes in 1) */
 	if (res = /(.*)\.S(\d\d)E(\d\d)(E(\d\d))?\..*/i.exec(file)) {
 		info.show = res[1];
 		info.season = res[2];
 		if (undefined == res[5]) { info.episode = res[3]; } 
 		else { info.episode = res[5]; }
+		log.info('debug','Matched on (.*)\.S(\d\d)E(\d\d)(E(\d\d))?\..*')
 	}
 	/* Special case for shows that run daily, with year.month.day format */
 	if (res = /(The\.Colbert\.Report|The\.Daily\.Show)\.(\d{4}.\d{2})\.(\d{2})/i.exec(file)) { 
 		info.show = res[1];
 		info.season = res[2];
 		info.episode = res[3];
+		log.info('debug','Matched on (The\.Colbert\.Report|The\.Daily\.Show)\.(\d{4}.\d{2})\.(\d{2})')
 	}
 	if (res = /mkv$/i.exec(file)) { info.type = "x264"; }
 	if (res = /avi$/i.exec(file)) { info.type = "XviD"; }
