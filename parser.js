@@ -33,6 +33,10 @@ module.exports.parse = function(file) {
 		info.season = res[2];
 		info.episode = res[3];
 	}
+	if (res = /mkv$/i.exec(file)) { info.type = "x264"; }
+	if (res = /avi$/i.exec(file)) { info.type = "XviD"; }
+	if (res = /mp4$/i.exec(file)) { info.type = "MP4"; }
+
 	if (undefined == info.show) { 
 		log.info('error','Could not parse ' + file) 
 	}
