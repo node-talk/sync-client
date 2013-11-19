@@ -1,5 +1,4 @@
-var log;
-log = require('winston'),
+var log = require('winston');
 
 
 /**
