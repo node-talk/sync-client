@@ -1,4 +1,4 @@
-log = require('winston'),
+var log = require('winston'),
 
 /**
  * Parse filename/directory to extract information for name and season.
@@ -7,7 +7,7 @@ log = require('winston'),
  **/
 
 module.exports.parse = function(file) {
-	var res = {};
+	var res;
 	var info = {};
 	var extension = {};
 	/* For shows that have normal S??E?? (with extr E?? for 2 episodes in 1) */
