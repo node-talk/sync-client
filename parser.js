@@ -1,4 +1,6 @@
-var log = require('winston'),
+var log;
+log = require('winston'),
+
 
 /**
  * Parse filename/directory to extract information for name and season.
